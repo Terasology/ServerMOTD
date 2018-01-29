@@ -1,0 +1,9 @@
+{
+    "id" : "ServerMOTD",
+    "version" : "0.1.0-SNAPSHOT",
+    "author" : "",
+    "displayName" : "ServerMOTD",
+    "description" : "",
+    "dependencies" : [],
+    "serverSideOnly" : false
+}
