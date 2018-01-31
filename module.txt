@@ -1,7 +1,7 @@
 {
     "id" : "ServerMOTD",
     "version" : "0.1.0-SNAPSHOT",
-    "author" : "",
+    "author" : "Naman-sopho",
     "displayName" : "ServerMOTD",
     "description" : "",
     "dependencies" : [],
