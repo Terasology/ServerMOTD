@@ -16,4 +16,5 @@
 package org.terasology.servermotd;
 
 public interface MOTDProvider {
+    void display();
 }
