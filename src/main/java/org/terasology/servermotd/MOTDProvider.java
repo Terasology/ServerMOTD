@@ -15,6 +15,21 @@
  */
 package org.terasology.servermotd;
 
-public interface MOTDProvider {
-    void display();
+import org.terasology.context.Context;
+import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.entitySystem.systems.RegisterMode;
+import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.registry.In;
+import org.terasology.rendering.nui.NUIManager;
+import org.terasology.rendering.nui.layers.mainMenu.MessagePopup;
+
+@RegisterSystem(RegisterMode.ALWAYS)
+public class MOTDProvider extends BaseComponentSystem {
+    @In
+    private Context context;
+
+    void display(String motd) {
+        NUIManager nuiManager = context.get(NUIManager.class);
+        nuiManager.pushScreen(MessagePopup.ASSET_URI, MessagePopup.class).setMessage("Server MOTD", motd);
+    }
 }
