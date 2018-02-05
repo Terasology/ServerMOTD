@@ -21,27 +21,24 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.network.NetworkMode;
 import org.terasology.network.NetworkSystem;
-import org.terasology.registry.In;
+import org.terasology.registry.CoreRegistry;
+import org.terasology.registry.Share;
 
+@Share(ServerMOTD.class)
 @RegisterSystem(RegisterMode.ALWAYS)
-public class ServerMOTDSystem extends BaseComponentSystem {
-    @In
-    private Context context;
+public class ServerMOTDSystem extends BaseComponentSystem implements ServerMOTD {
+    private Context context = CoreRegistry.get(Context.class);
 
-    /*public ServerMOTDSystem() {
-        context.put(ServerMOTDSystem.class, this);
-    }*/
-
+    @Override
     public void initialise() {
         String motd = "default";
-        context.put(ServerMOTDSystem.class, this);
 
         NetworkSystem networkSystem = context.get(NetworkSystem.class);
 
         if (networkSystem.getMode() == NetworkMode.CLIENT) {
             if (motd != null && motd.length() != 0) {
                 MOTDProvider renderMOTD = new MOTDProvider();
-                renderMOTD.display(motd);
+                renderMOTD.display(motd, context);
             }
         }
     }

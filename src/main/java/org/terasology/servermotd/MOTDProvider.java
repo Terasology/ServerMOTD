@@ -16,19 +16,12 @@
 package org.terasology.servermotd;
 
 import org.terasology.context.Context;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.registry.In;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.layers.mainMenu.MessagePopup;
 
-@RegisterSystem(RegisterMode.ALWAYS)
-public class MOTDProvider extends BaseComponentSystem {
-    @In
-    private Context context;
+public class MOTDProvider {
 
-    void display(String motd) {
+    void display(String motd, Context context) {
         NUIManager nuiManager = context.get(NUIManager.class);
         nuiManager.pushScreen(MessagePopup.ASSET_URI, MessagePopup.class).setMessage("Server MOTD", motd);
     }
