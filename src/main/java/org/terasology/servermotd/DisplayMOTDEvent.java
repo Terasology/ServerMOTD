@@ -15,6 +15,9 @@
  */
 package org.terasology.servermotd;
 
-public interface ServerMOTD {
-    void initialise();
+import org.terasology.entitySystem.event.Event;
+import org.terasology.network.OwnerEvent;
+
+@OwnerEvent
+public class DisplayMOTDEvent implements Event {
 }
