@@ -16,13 +16,40 @@
 package org.terasology.servermotd;
 
 import org.terasology.context.Context;
+import org.terasology.entitySystem.entity.EntityManager;
+import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.network.NetworkComponent;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.layers.mainMenu.MessagePopup;
 
+import java.util.Iterator;
+
 public class MOTDProvider {
 
-    void display(String motd, Context context) {
+    public void display(String motd, Context context) {
         NUIManager nuiManager = context.get(NUIManager.class);
         nuiManager.pushScreen(MessagePopup.ASSET_URI, MessagePopup.class).setMessage("Server MOTD", motd);
     }
+
+    public EntityRef getMOTDEntity(EntityManager entityManager) {
+        Iterable<EntityRef> MOTDEntities = entityManager.getEntitiesWith(MOTDComponent.class);
+        Iterator<EntityRef> i = MOTDEntities.iterator();
+
+        if(i.hasNext()) {
+            return i.next();
+        }
+        else {
+            MOTDComponent MOTDComp = new MOTDComponent();
+            MOTDComp.motd = "default";
+
+            EntityRef entityRef = entityManager.create(MOTDComp);
+
+            NetworkComponent netComp = new NetworkComponent();
+            netComp.replicateMode = NetworkComponent.ReplicateMode.ALWAYS;
+            entityRef.addComponent(netComp);
+
+            return entityRef;
+        }
+    }
+
 }

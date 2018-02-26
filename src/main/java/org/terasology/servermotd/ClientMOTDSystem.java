@@ -16,28 +16,38 @@
 package org.terasology.servermotd;
 
 import org.terasology.context.Context;
+import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.permission.PermissionManager;
 import org.terasology.registry.CoreRegistry;
+import org.terasology.registry.In;
 
 @RegisterSystem(RegisterMode.CLIENT)
-public class ClientMOTDSystem extends BaseComponentSystem implements Event {
+public class ClientMOTDSystem extends BaseComponentSystem {
+    @In
+    private EntityManager entityManager;
 
-    private EntityRef entity = EntityRef.NULL;
+    private MOTDProvider renderMOTD = new MOTDProvider();
 
     private Context context = CoreRegistry.get(Context.class);
+    private EntityRef entity;
 
     public void initialise() {
-        entity.send(new DisplayMOTDEvent());
+
     }
 
-    @Command(shortDescription = "Displays server MOTD", runOnServer = true, requiredPermission = PermissionManager.NO_PERMISSION)
+    @Override
+    public void postBegin() {
+        displayMOTD();
+    }
+
+    @Command(shortDescription = "Displays server MOTD", requiredPermission = PermissionManager.NO_PERMISSION)
     public void displayMOTD() {
-        entity.send(new DisplayMOTDEvent());
+        entity = renderMOTD.getMOTDEntity(entityManager);
+        renderMOTD.display(entity.getComponent(MOTDComponent.class).motd, context);
     }
 }

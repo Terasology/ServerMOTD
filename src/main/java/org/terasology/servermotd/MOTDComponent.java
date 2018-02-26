@@ -15,9 +15,11 @@
  */
 package org.terasology.servermotd;
 
-import org.terasology.entitySystem.event.Event;
-import org.terasology.network.OwnerEvent;
+import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
-@OwnerEvent
-public class DisplayMOTDEvent implements Event {
+public class MOTDComponent implements Component {
+    @Replicate(value = FieldReplicateType.SERVER_TO_CLIENT)
+    public String motd;
 }
