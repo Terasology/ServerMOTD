@@ -46,37 +46,26 @@ public class ClientMOTDSystem extends BaseComponentSystem {
         displayMOTD();
     }
 
+    @Command(shortDescription = "Append to server MOTD", helpText = "Append a message to the current server MOTD if you are admin.",
+            requiredPermission = PermissionManager.CHEAT_PERMISSION)
+    public String appendToMOTD (@CommandParam(value = "New Message") String message) {
+        entity = renderMOTD.getMOTDEntity(entityManager);
+        MOTDComponent comp = entity.getComponent(MOTDComponent.class);
+
+        message = " " + message;
+        comp.motd += message;
+
+        entity.saveComponent(comp);
+        return "Server MOTD edited use displayMOTD command to view the new MOTD";
+    }
+
     @Command(shortDescription = "Displays server MOTD", requiredPermission = PermissionManager.NO_PERMISSION)
     public void displayMOTD() {
         entity = renderMOTD.getMOTDEntity(entityManager);
         renderMOTD.display(entity.getComponent(MOTDComponent.class).motd, context);
     }
 
-    @Command(shortDescription = "Edit server MOTD", helpText = "Edit the current server MOTD if you are admin." +
-            " Use 'a' - to append to current MOTD" +
-            " 'w' for a new one", requiredPermission = PermissionManager.CHEAT_PERMISSION)
-    public String editMOTD (@CommandParam(value = "a/w") String type, @CommandParam(value = "New Message") String message) {
-        entity = renderMOTD.getMOTDEntity(entityManager);
-        MOTDComponent comp = entity.getComponent(MOTDComponent.class);
-        switch (type) {
-            case "a":
-                comp.motd += message;
-                break;
-
-            case "w":
-                comp.motd = message;
-                break;
-
-            default:
-            return "Error in command syntax, use help editMOTD command for help";
-        }
-
-        entity.saveComponent(comp);
-        return "Server MOTD edited use displayMOTD command to view the new MOTD";
-    }
-
-    @Command(shortDescription = "Overwites the current server MOTD", helpText = "Overwrites the current server MOTD if you are admin." +
-            "Same as using the 'w' argument with editMOTD command"
+    @Command(shortDescription = "Overwites the current server MOTD", helpText = "Overwrites the current server MOTD if you are admin."
             , requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String overwriteMOTD (@CommandParam(value = "New Message") String message) {
         entity = renderMOTD.getMOTDEntity(entityManager);
