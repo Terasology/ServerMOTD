@@ -22,6 +22,7 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.console.commandSystem.annotations.Command;
+import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.permission.PermissionManager;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
@@ -49,5 +50,28 @@ public class ClientMOTDSystem extends BaseComponentSystem {
     public void displayMOTD() {
         entity = renderMOTD.getMOTDEntity(entityManager);
         renderMOTD.display(entity.getComponent(MOTDComponent.class).motd, context);
+    }
+
+    @Command(shortDescription = "Edit server MOTD", helpText = "Edit the current server MOTD if you are admin." +
+            " Use \'a\' - to append to current MOTD" +
+            " 'w' for a new one", requiredPermission = PermissionManager.CHEAT_PERMISSION)
+    public String editMOTD (@CommandParam(value = "a/w") String type, @CommandParam(value = "New Message") String message) {
+        entity = renderMOTD.getMOTDEntity(entityManager);
+        MOTDComponent comp = entity.getComponent(MOTDComponent.class);
+        switch (type) {
+            case "a":
+                comp.motd += message;
+                break;
+
+            case "w":
+                comp.motd = message;
+                break;
+
+            default:
+            return "Error in command syntax, use help editMOTD command for help";
+        }
+
+        entity.saveComponent(comp);
+        return "Server MOTD edited use displayMOTD command to view the new MOTD";
     }
 }

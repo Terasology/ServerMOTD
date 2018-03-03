@@ -47,24 +47,4 @@ public class ServerMOTDSystem extends BaseComponentSystem {
         MOTDEntity = renderMOTD.getMOTDEntity(entityManager);
     }
 
-    @Command(shortDescription = "Edit server MOTD", helpText = "Edit the current server MOTD if you are admin." +
-            " Use \'a\' - to append to current MOTD" +
-            " 'w' for a new one", runOnServer = true)
-    public String editMOTD(@CommandParam(value = "a/w") String type, @CommandParam(value = "New Message") String message, @Sender EntityRef admin) {
-        MOTDComponent comp = MOTDEntity.getComponent(MOTDComponent.class);
-        if (type.equals("a")) {
-            comp.motd += message;
-        }
-
-        else if (type.equals("w")) {
-            comp.motd = message;
-        }
-
-        else {
-            return "Error in command syntax, use help editMOTD command for help";
-        }
-
-        MOTDEntity.saveComponent(comp);
-        return "Server MOTD edited use displayMOTD command to view the new MOTD";
-    }
 }
