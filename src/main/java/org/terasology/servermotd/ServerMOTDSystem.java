@@ -35,7 +35,7 @@ public class ServerMOTDSystem extends BaseComponentSystem {
 
     private Context context = CoreRegistry.get(Context.class);
 
-    private EntityRef MOTDEntity;
+    private EntityRef motdEntity;
     private MOTDProvider renderMOTD = new MOTDProvider();
 
     public void initialise() {
@@ -44,7 +44,7 @@ public class ServerMOTDSystem extends BaseComponentSystem {
 
     @Override
     public void postBegin() {
-        MOTDEntity = renderMOTD.getMOTDEntity(entityManager);
+        motdEntity = renderMOTD.getMOTDEntity(entityManager);
     }
 
 }

@@ -32,17 +32,17 @@ public class MOTDProvider {
     }
 
     public EntityRef getMOTDEntity(EntityManager entityManager) {
-        Iterable<EntityRef> MOTDEntities = entityManager.getEntitiesWith(MOTDComponent.class);
-        Iterator<EntityRef> i = MOTDEntities.iterator();
+        Iterable<EntityRef> motdEntities = entityManager.getEntitiesWith(MOTDComponent.class);
+        Iterator<EntityRef> i = motdEntities.iterator();
 
         if(i.hasNext()) {
             return i.next();
         }
         else {
-            MOTDComponent MOTDComp = new MOTDComponent();
-            MOTDComp.motd = "default";
+            MOTDComponent motdComp = new MOTDComponent();
+            motdComp.motd = "default";
 
-            EntityRef entityRef = entityManager.create(MOTDComp);
+            EntityRef entityRef = entityManager.create(motdComp);
 
             NetworkComponent netComp = new NetworkComponent();
             netComp.replicateMode = NetworkComponent.ReplicateMode.ALWAYS;
