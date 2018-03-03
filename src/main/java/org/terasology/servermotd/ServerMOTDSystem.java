@@ -21,9 +21,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.console.commandSystem.annotations.Command;
-import org.terasology.logic.console.commandSystem.annotations.CommandParam;
-import org.terasology.logic.console.commandSystem.annotations.Sender;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 

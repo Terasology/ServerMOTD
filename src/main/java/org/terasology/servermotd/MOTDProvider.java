@@ -28,7 +28,7 @@ public class MOTDProvider {
 
     public void display(String motd, Context context) {
         NUIManager nuiManager = context.get(NUIManager.class);
-        nuiManager.pushScreen(MessagePopup.ASSET_URI, MessagePopup.class).setMessage("Server MOTD", motd);
+        nuiManager.pushScreen(MessagePopup.ASSET_URI, MessagePopup.class).setMessage("Server Says", motd);
     }
 
     public EntityRef getMOTDEntity(EntityManager entityManager) {

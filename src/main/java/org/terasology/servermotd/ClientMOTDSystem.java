@@ -53,7 +53,7 @@ public class ClientMOTDSystem extends BaseComponentSystem {
     }
 
     @Command(shortDescription = "Edit server MOTD", helpText = "Edit the current server MOTD if you are admin." +
-            " Use \'a\' - to append to current MOTD" +
+            " Use 'a' - to append to current MOTD" +
             " 'w' for a new one", requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String editMOTD (@CommandParam(value = "a/w") String type, @CommandParam(value = "New Message") String message) {
         entity = renderMOTD.getMOTDEntity(entityManager);
@@ -70,6 +70,19 @@ public class ClientMOTDSystem extends BaseComponentSystem {
             default:
             return "Error in command syntax, use help editMOTD command for help";
         }
+
+        entity.saveComponent(comp);
+        return "Server MOTD edited use displayMOTD command to view the new MOTD";
+    }
+
+    @Command(shortDescription = "Overwites the current server MOTD", helpText = "Overwrites the current server MOTD if you are admin." +
+            "Same as using the 'w' argument with editMOTD command"
+            , requiredPermission = PermissionManager.CHEAT_PERMISSION)
+    public String overwriteMOTD (@CommandParam(value = "New Message") String message) {
+        entity = renderMOTD.getMOTDEntity(entityManager);
+        MOTDComponent comp = entity.getComponent(MOTDComponent.class);
+
+        comp.motd = message;
 
         entity.saveComponent(comp);
         return "Server MOTD edited use displayMOTD command to view the new MOTD";
