@@ -41,13 +41,8 @@ public class ClientMOTDSystem extends BaseComponentSystem {
 
     }
 
-    @Override
-    public void postBegin() {
-        displayMOTD();
-    }
-
     @Command(shortDescription = "Append to server MOTD", helpText = "Append a message to the current server MOTD if you are admin.",
-            requiredPermission = PermissionManager.CHEAT_PERMISSION)
+            requiredPermission = PermissionManager.CHEAT_PERMISSION, runOnServer = true)
     public String appendToMOTD (@CommandParam(value = "New Message") String message) {
         entity = renderMOTD.getMOTDEntity(entityManager);
         MOTDComponent comp = entity.getComponent(MOTDComponent.class);
@@ -66,7 +61,7 @@ public class ClientMOTDSystem extends BaseComponentSystem {
     }
 
     @Command(shortDescription = "Overwites the current server MOTD", helpText = "Overwrites the current server MOTD if you are admin."
-            , requiredPermission = PermissionManager.CHEAT_PERMISSION)
+            , requiredPermission = PermissionManager.CHEAT_PERMISSION, runOnServer = true)
     public String overwriteMOTD (@CommandParam(value = "New Message") String message) {
         entity = renderMOTD.getMOTDEntity(entityManager);
         MOTDComponent comp = entity.getComponent(MOTDComponent.class);

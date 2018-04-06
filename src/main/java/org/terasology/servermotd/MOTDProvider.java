@@ -15,6 +15,8 @@
  */
 package org.terasology.servermotd;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -34,9 +36,18 @@ public class MOTDProvider {
     public EntityRef getMOTDEntity(EntityManager entityManager) {
         Iterable<EntityRef> motdEntities = entityManager.getEntitiesWith(MOTDComponent.class);
         Iterator<EntityRef> i = motdEntities.iterator();
+        Logger logger = LoggerFactory.getLogger(MOTDProvider.class);
 
         if(i.hasNext()) {
-            return i.next();
+            logger.info("Used old entity");
+            int sum = 0;
+            EntityRef entityRef = i.next();
+            while(i.hasNext()) {
+                entityRef = i.next();
+                sum++;
+            }
+            logger.info(Integer.toString(sum + 1));
+            return entityRef;
         }
         else {
             MOTDComponent motdComp = new MOTDComponent();
@@ -47,6 +58,8 @@ public class MOTDProvider {
             NetworkComponent netComp = new NetworkComponent();
             netComp.replicateMode = NetworkComponent.ReplicateMode.ALWAYS;
             entityRef.addComponent(netComp);
+
+            logger.info("Created new entity" + entityRef);
 
             return entityRef;
         }
