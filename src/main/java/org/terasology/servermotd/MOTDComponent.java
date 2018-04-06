@@ -15,6 +15,11 @@
  */
 package org.terasology.servermotd;
 
-public interface ServerMOTD {
-    void initialise();
+import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
+
+public class MOTDComponent implements Component {
+    @Replicate(value = FieldReplicateType.SERVER_TO_CLIENT)
+    public String motd;
 }

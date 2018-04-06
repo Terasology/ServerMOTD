@@ -16,30 +16,32 @@
 package org.terasology.servermotd;
 
 import org.terasology.context.Context;
+import org.terasology.entitySystem.entity.EntityManager;
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.network.NetworkMode;
-import org.terasology.network.NetworkSystem;
 import org.terasology.registry.CoreRegistry;
-import org.terasology.registry.Share;
+import org.terasology.registry.In;
 
-@Share(ServerMOTD.class)
-@RegisterSystem(RegisterMode.ALWAYS)
-public class ServerMOTDSystem extends BaseComponentSystem implements ServerMOTD {
+
+@RegisterSystem(RegisterMode.AUTHORITY)
+public class ServerMOTDSystem extends BaseComponentSystem {
+    @In
+    private EntityManager entityManager;
+
     private Context context = CoreRegistry.get(Context.class);
 
-    @Override
+    private EntityRef motdEntity;
+    private MOTDProvider renderMOTD = new MOTDProvider();
+
     public void initialise() {
-        String motd = "default";
 
-        NetworkSystem networkSystem = context.get(NetworkSystem.class);
-
-        if (networkSystem.getMode() == NetworkMode.CLIENT) {
-            if (motd != null && motd.length() != 0) {
-                MOTDProvider renderMOTD = new MOTDProvider();
-                renderMOTD.display(motd, context);
-            }
-        }
     }
+
+    @Override
+    public void postBegin() {
+        motdEntity = renderMOTD.getMOTDEntity(entityManager);
+    }
+
 }
