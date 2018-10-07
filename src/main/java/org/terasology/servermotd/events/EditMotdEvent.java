@@ -16,13 +16,18 @@
 package org.terasology.servermotd.events;
 
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 
+@ServerEvent
 public class EditMotdEvent implements Event {
-    boolean overwriteMotd;
-    String message;
+    public boolean overwriteMotd;
+    public String editMessage;
 
-    public EditMotdEvent(boolean overwrite, String edit) {
+    public void setEditMessage(String edit) {
+        this.editMessage = edit;
+    }
+
+    public void setOverwriteMotd(boolean overwrite) {
         this.overwriteMotd = overwrite;
-        this.message = edit;
     }
 }

@@ -15,9 +15,6 @@
  */
 package org.terasology.servermotd;
 
-import org.terasology.context.Context;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -25,9 +22,7 @@ import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.permission.PermissionManager;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
-import org.terasology.rendering.nui.NUIManager;
 import org.terasology.servermotd.events.DisplayMotdEvent;
 import org.terasology.servermotd.events.EditMotdEvent;
 
@@ -36,19 +31,18 @@ public class ClientMOTDSystem extends BaseComponentSystem {
     @In
     LocalPlayer localPlayer;
 
-    @In
-    private Context context;
-
-    public void initialise() {
-
+    @Override
+    public void postBegin() {
+        displayMotd();
     }
 
     @Command(shortDescription = "Append to server MOTD",
             helpText = "Append a message to the current server MOTD if you are admin.",
-            requiredPermission = PermissionManager.CHEAT_PERMISSION,
-            runOnServer = true)
+            requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String appendToMotd (@CommandParam(value = "New Message") String message) {
-        EditMotdEvent editEvent = new EditMotdEvent(false, message);
+        EditMotdEvent editEvent = new EditMotdEvent();
+        editEvent.setEditMessage(message);
+        editEvent.setOverwriteMotd(false);
         localPlayer.getCharacterEntity().send(editEvent);
 
         return "Server MOTD edited use displayMOTD command to view the new MOTD";
@@ -57,16 +51,17 @@ public class ClientMOTDSystem extends BaseComponentSystem {
     @Command(shortDescription = "Displays server MOTD",
             requiredPermission = PermissionManager.NO_PERMISSION)
     public void displayMotd() {
-        NUIManager nuiManager = context.get(NUIManager.class);
-        localPlayer.getCharacterEntity().send(new DisplayMotdEvent(nuiManager));
+        DisplayMotdEvent displayEvent = new DisplayMotdEvent();
+        localPlayer.getCharacterEntity().send(displayEvent);
     }
 
     @Command(shortDescription = "Overwites the current server MOTD",
             helpText = "Overwrites the current server MOTD if you are admin.",
-            requiredPermission = PermissionManager.CHEAT_PERMISSION,
-            runOnServer = true)
+            requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String overwriteMotd (@CommandParam(value = "New Message") String message) {
-        EditMotdEvent editEvent = new EditMotdEvent(true, message);
+        EditMotdEvent editEvent = new EditMotdEvent();
+        editEvent.setOverwriteMotd(true);
+        editEvent.setEditMessage(message);
         localPlayer.getCharacterEntity().send(editEvent);
         return "Server MOTD edited use displayMOTD command to view the new MOTD";
     }

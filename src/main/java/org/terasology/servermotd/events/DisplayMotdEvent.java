@@ -16,12 +16,9 @@
 package org.terasology.servermotd.events;
 
 import org.terasology.entitySystem.event.Event;
-import org.terasology.rendering.nui.NUIManager;
+import org.terasology.network.ServerEvent;
 
+@ServerEvent
 public class DisplayMotdEvent implements Event {
-    NUIManager nuiManager;
 
-    public DisplayMotdEvent(NUIManager manager) {
-        this.nuiManager = manager;
-    }
 }
