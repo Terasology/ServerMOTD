@@ -39,7 +39,7 @@ public class MOTDProvider {
         Logger logger = LoggerFactory.getLogger(MOTDProvider.class);
 
         if(i.hasNext()) {
-            logger.info("Used old entity");
+            logger.info("=========================Used old entity=========================");
             int sum = 0;
             EntityRef entityRef = i.next();
             while(i.hasNext()) {
@@ -59,7 +59,7 @@ public class MOTDProvider {
             netComp.replicateMode = NetworkComponent.ReplicateMode.ALWAYS;
             entityRef.addComponent(netComp);
 
-            logger.info("Created new entity" + entityRef);
+            logger.info("=====================Created new entity===========================" + entityRef);
 
             return entityRef;
         }

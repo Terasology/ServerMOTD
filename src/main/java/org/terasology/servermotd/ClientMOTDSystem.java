@@ -24,51 +24,50 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.permission.PermissionManager;
+import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
+import org.terasology.rendering.nui.NUIManager;
+import org.terasology.servermotd.events.DisplayMotdEvent;
+import org.terasology.servermotd.events.EditMotdEvent;
 
 @RegisterSystem(RegisterMode.CLIENT)
 public class ClientMOTDSystem extends BaseComponentSystem {
     @In
-    private EntityManager entityManager;
+    LocalPlayer localPlayer;
 
-    private MOTDProvider renderMOTD = new MOTDProvider();
-
-    private Context context = CoreRegistry.get(Context.class);
-    private EntityRef entity;
+    @In
+    private Context context;
 
     public void initialise() {
 
     }
 
-    @Command(shortDescription = "Append to server MOTD", helpText = "Append a message to the current server MOTD if you are admin.",
-            requiredPermission = PermissionManager.CHEAT_PERMISSION, runOnServer = true)
-    public String appendToMOTD (@CommandParam(value = "New Message") String message) {
-        entity = renderMOTD.getMOTDEntity(entityManager);
-        MOTDComponent comp = entity.getComponent(MOTDComponent.class);
+    @Command(shortDescription = "Append to server MOTD",
+            helpText = "Append a message to the current server MOTD if you are admin.",
+            requiredPermission = PermissionManager.CHEAT_PERMISSION,
+            runOnServer = true)
+    public String appendToMotd (@CommandParam(value = "New Message") String message) {
+        EditMotdEvent editEvent = new EditMotdEvent(false, message);
+        localPlayer.getCharacterEntity().send(editEvent);
 
-        message = " " + message;
-        comp.motd += message;
-
-        entity.saveComponent(comp);
         return "Server MOTD edited use displayMOTD command to view the new MOTD";
     }
 
-    @Command(shortDescription = "Displays server MOTD", requiredPermission = PermissionManager.NO_PERMISSION)
-    public void displayMOTD() {
-        entity = renderMOTD.getMOTDEntity(entityManager);
-        renderMOTD.display(entity.getComponent(MOTDComponent.class).motd, context);
+    @Command(shortDescription = "Displays server MOTD",
+            requiredPermission = PermissionManager.NO_PERMISSION)
+    public void displayMotd() {
+        NUIManager nuiManager = context.get(NUIManager.class);
+        localPlayer.getCharacterEntity().send(new DisplayMotdEvent(nuiManager));
     }
 
-    @Command(shortDescription = "Overwites the current server MOTD", helpText = "Overwrites the current server MOTD if you are admin."
-            , requiredPermission = PermissionManager.CHEAT_PERMISSION, runOnServer = true)
-    public String overwriteMOTD (@CommandParam(value = "New Message") String message) {
-        entity = renderMOTD.getMOTDEntity(entityManager);
-        MOTDComponent comp = entity.getComponent(MOTDComponent.class);
-
-        comp.motd = message;
-
-        entity.saveComponent(comp);
+    @Command(shortDescription = "Overwites the current server MOTD",
+            helpText = "Overwrites the current server MOTD if you are admin.",
+            requiredPermission = PermissionManager.CHEAT_PERMISSION,
+            runOnServer = true)
+    public String overwriteMotd (@CommandParam(value = "New Message") String message) {
+        EditMotdEvent editEvent = new EditMotdEvent(true, message);
+        localPlayer.getCharacterEntity().send(editEvent);
         return "Server MOTD edited use displayMOTD command to view the new MOTD";
     }
 }

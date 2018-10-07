@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 MovingBlocks
+ * Copyright 2018 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.servermotd;
+package org.terasology.servermotd.events;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.Replicate;
+import org.terasology.entitySystem.event.Event;
+import org.terasology.rendering.nui.NUIManager;
 
-public class MOTDComponent implements Component {
-    @Replicate(value = FieldReplicateType.OWNER_TO_SERVER_TO_CLIENT)
-    public String motd;
+public class DisplayMotdEvent implements Event {
+    NUIManager nuiManager;
+
+    public DisplayMotdEvent(NUIManager manager) {
+        this.nuiManager = manager;
+    }
 }
