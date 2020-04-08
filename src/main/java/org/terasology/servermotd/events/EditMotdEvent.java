@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 MovingBlocks
+ * Copyright 2018 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.servermotd;
+package org.terasology.servermotd.events;
 
-public interface ServerMOTD {
-    void initialise();
+import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
+
+@ServerEvent
+public class EditMotdEvent implements Event {
+    public boolean overwriteMotd;
+    public String editMessage;
+
+    public void setEditMessage(String edit) {
+        this.editMessage = edit;
+    }
+
+    public void setOverwriteMotd(boolean overwrite) {
+        this.overwriteMotd = overwrite;
+    }
 }
